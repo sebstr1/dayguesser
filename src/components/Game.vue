@@ -138,12 +138,39 @@ export default {
         this.storageRecord = this.streak
         localStorage.setItem('storageRecord', JSON.stringify(this.streak))
       }
+    },
+    handleKeyUp (event) {
+      if (event.keyCode === 49 || event.keyCode === 97) {
+        this.makeGuess('Monday')
+      }
+      if (event.keyCode === 50 || event.keyCode === 98) {
+        this.makeGuess('Tuesday')
+      }
+      if (event.keyCode === 51 || event.keyCode === 99) {
+        this.makeGuess('Wednesday')
+      }
+      if (event.keyCode === 52 || event.keyCode === 100) {
+        this.makeGuess('Thursday')
+      }
+      if (event.keyCode === 53 || event.keyCode === 101) {
+        this.makeGuess('Friday')
+      }
+      if (event.keyCode === 54 || event.keyCode === 102) {
+        this.makeGuess('Saturday')
+      }
+      if (event.keyCode === 55 || event.keyCode === 103) {
+        this.makeGuess('Sunday')
+      }
     }
   },
   mounted () {
     if (localStorage.getItem('storageRecord')) this.storageRecord = JSON.parse(localStorage.getItem('storageRecord'))
-    console.log(this.storageRecord)
     this.randomize()
+
+    window.addEventListener('keyup', this.handleKeyUp)
+  },
+  beforeDestroy () {
+    window.removeEventListener('keyup', this.handleKeyUp)
   }
 }
 </script>
