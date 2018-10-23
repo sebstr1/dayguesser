@@ -14,7 +14,8 @@
       </v-flex>
 
       <v-flex xs12 class="text-xs-left text-md-center">
-        <div v-bind:class="mobile" class="font-weight-bold">Streak: {{streak}}</div>
+        <div v-bind:class="mobile" class="font-weight-light">Device highscore: {{storageRecord}}</div>
+        <div v-bind:class="mobile" class="font-weight-light">Streak: {{streak}}</div>
       </v-flex>
 
       <v-flex xs12 v-bind:class="getResult" class="display-2 font-weight-bold my-4">
@@ -87,6 +88,7 @@ export default {
     randomDate: '',
     correctanswer: '',
     streak: 0,
+    storageRecord: 0,
     response: '\n',
     result: false
 
@@ -102,6 +104,9 @@ export default {
       let size = this.$vuetify.breakpoint.name === 'xs' ? 'title' : 'display-1'
       return this.result ? 'blue--text ' + size : 'red--text ' + size
     },
+    getHighscore () {
+      return this.storageRecord
+    },
     mobile () {
       return this.$vuetify.breakpoint.name === 'xs' ? '' : 'title'
     }
@@ -116,18 +121,28 @@ export default {
       let correctanswer = this.correctanswer
       if (guess === this.correctanswer) {
         this.streak++
+        if (this.streak > this.storageRecord) this.isRecord()
         this.response = this.randomDate + ' = ' + correctanswer
         this.result = true
       } else {
+        this.isRecord()
         this.streak = 0
         this.response = this.randomDate + ' = ' + correctanswer
         this.result = false
       }
 
       this.randomize()
+    },
+    isRecord () {
+      if (this.storageRecord < this.streak) {
+        this.storageRecord = this.streak
+        localStorage.setItem('storageRecord', JSON.stringify(this.streak))
+      }
     }
   },
   mounted () {
+    if (localStorage.getItem('storageRecord')) this.storageRecord = JSON.parse(localStorage.getItem('storageRecord'))
+    console.log(this.storageRecord)
     this.randomize()
   }
 }
